@@ -1,0 +1,83 @@
+.accloc {
+	margin: 0px;
+	padding: 0px;
+	font-family: Verdana;
+	font-size: 12px;
+	line-height: 20px;
+	color: rgb(0, 0, 0);
+	text-align: left;
+}
+input.accloc {
+	font-family: Verdana;
+	font-size: 10px;
+	line-height: 12px;
+	width: 180px;
+	text-align: center;
+}
+input.accloc.halfsize {
+	width: 90px;
+	margin: 0px;
+	padding: 0px;
+}
+textarea.accloc {
+	font-family: Verdana;
+	font-size: 12px;
+	line-height: 14px;
+	width: 180px;
+}
+.divWaitServer {
+	margin: 0px;
+	padding: 2px 7px;
+	font-family: Verdana;
+	font-size: 10px;
+	line-height: 14px;
+	color: rgb(0, 0, 0);
+	font-weight: bold;
+	background-color: rgb(255, 0, 0);
+	display: inline;
+	position: absolute;
+	left: 1px;
+}
+.divLoading {
+	margin: 0px;
+	padding: 2px 7px;
+	font-family: Verdana;
+	font-size: 10px;
+	line-height: 14px;
+	color: rgb(0, 0, 0);
+	font-weight: bold;
+	background-color: rgb(255, 0, 0);
+	display: block;
+	position: absolute;
+}
+.localizHead {
+	margin: 0px;
+	padding: 2px;
+	font-family: Verdana;
+	font-size: 12px;
+	line-height: 14px;
+	color: rgb(255, 255, 255);
+	font-weight: bold;
+/*
+	background-color: rgb(50, 50, 100);
+	background-color: rgb(110, 130, 190);
+*/
+	background-color: rgb(86, 117, 172);
+	border-bottom: 1px solid rgb(50, 50, 50);
+}
+a.help {
+	font-family: Verdana;
+	font-size: 12px;
+	line-height: 12px;
+	color: rgb(255, 255, 255);
+	font-weight: normal;
+	float: right;
+	height: 16px;
+	width: 16px;
+	background-image: url(helpmark.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+a.help:hover {
+	background-image: url(helpmark_a.png);
+}

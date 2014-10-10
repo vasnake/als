@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<?xml-stylesheet type="text/xsl" href="mapwindow.xsl"?>
+
+<page>
+	<TITLE>Локализация аварий. Пилотный проект. ГИС Мособлгаз.</TITLE>
+	<HEAD>Локализация аварий на модели сети газового хозяйства МОГ</HEAD>
+	<MAP>topotestN.mwf</MAP>
+	<!-- appsList>gazObjAttribs, accidentLocalization</appsList -->
+	<appsList>accidentLocalization</appsList>
+<!--
+/gismog/perspectives/acc.localiz/
+-->
+	<showDebugWnd>no</showDebugWnd>
+</page>
