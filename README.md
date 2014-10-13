@@ -17,6 +17,11 @@ But real gem is the backend.
 
 All this task was performed using PL/SQL package that was written in two month. Maybe three.
 
+Components
+
+* web -- web frontend
+
+
 Links
 
 * http://mapguide.wordpress.com/2014/03/18/autodesk-mapguide-6-5-retired-but-still-downloadable/
