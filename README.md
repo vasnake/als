@@ -3,7 +3,10 @@ als
 
 Accident Localization System, year 2005, gas networks.
 
-This is a prototype of ALS for gas networks. User interface was built using Autodesk MapGuide 6.5 ActiveX map viewer. Well, it was time of MS Internet Explorer 6 and I wrote this web GIS application on PHP (server code), XML/XSL (web pages templates) and JS (user interface).
+This is a prototype of ALS for gas networks.
+User interface was built using Autodesk MapGuide 6.5 ActiveX map viewer.
+Well, it was time of MS Internet Explorer 6 and I wrote this web GIS application on PHP (server code),
+XML/XSL (web pages templates) and JS (user interface).
 
 But real gem is the backend.
 
@@ -19,7 +22,3 @@ Links
 * http://mapguide.wordpress.com/2014/03/18/autodesk-mapguide-6-5-retired-but-still-downloadable/
 * http://www.mapguide.com/help/ver6.5/api/en/
 * http://vasnake.blogspot.ru/2005/11/plsql.html
-
-md help
-
-* https://help.github.com/articles/markdown-basics/
