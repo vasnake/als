@@ -2,13 +2,13 @@
 <?xml-stylesheet type="text/xsl" href="mapwindow.xsl"?>
 
 <page>
-	<TITLE>Локализация аварий. Пилотный проект. ГИС Мособлгаз.</TITLE>
-	<HEAD>Локализация аварий на модели сети газового хозяйства МОГ</HEAD>
-	<MAP>topotestN.mwf</MAP>
-	<!-- appsList>gazObjAttribs, accidentLocalization</appsList -->
-	<appsList>accidentLocalization</appsList>
+    <TITLE>Локализация аварий. Пилотный проект. ГИС Мособлгаз.</TITLE>
+    <HEAD>Локализация аварий на модели сети газового хозяйства МОГ</HEAD>
+    <MAP>topotestN.mwf</MAP>
+    <!-- appsList>gazObjAttribs, accidentLocalization</appsList -->
+    <appsList>accidentLocalization</appsList>
 <!--
 /gismog/perspectives/acc.localiz/
 -->
-	<showDebugWnd>no</showDebugWnd>
+    <showDebugWnd>no</showDebugWnd>
 </page>
