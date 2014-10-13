@@ -8,14 +8,14 @@ User interface was built using Autodesk MapGuide 6.5 ActiveX map viewer.
 Well, it was time of MS Internet Explorer 6 and I wrote this web GIS application on PHP (server code),
 XML/XSL (web pages templates) and JS (user interface).
 
-But real gem is the backend.
+But real gem is the backend:
 
 1. Data was loaded from shape (shp) files to Oracle DB with spatial cartridge.
 2. Spatial data was cleansed and transformed.
 3. Then topology was created based on that data.
 4. Functions for topology analysis was developed.
 
-All this task was performed using PL/SQL package that was written in two month. Maybe three.
+All this tasks was performed using PL/SQL package that was written in two month. Maybe three.
 
 Components
 
