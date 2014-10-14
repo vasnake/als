@@ -11,6 +11,7 @@ All text files have encoding="WINDOWS-1251", beware.
 * acc.localiz.js -- application JavaScript functions, UI processing. Communicate with backend via AJAX.
 * acc.localiz.php -- backend web interface. Process user requests made via JS and utilize Oracle PL/SQL package for calculations on gas network. Also generate report XML.
 * acc.localiz.rep.xsl -- report page XSLT template.
+* acc.localiz.rep.js -- report page scripts.
 
 JS interface
 
@@ -21,7 +22,12 @@ JS interface
 * acclocObj.onZoomCheckbox() -- zoom map to affected region.
 * acclocObj.onOpenReportButton() -- open report page.
 
-PL/SQL interface
+JS report interface
+
+* onAccLocalizPageLoad() -- on page load, check if printer friendly formatting needed.
+* accLocalizRepShowMap() -- open map window.
+
+PL/SQL interface, package functions used in PHP code
 
 * mogTopo.getLinkByPoint -- find link nearest to point. Example
 
@@ -41,16 +47,15 @@ select * from table(mogTopo.getDisconnectedByDampedLinks2())
 
 Other files
 
-* acc.localiz.css
-* acc.localiz.mwf
-* acc.localiz.rep.js
-* acc.localiz.rep.php
-* Accident.SMB
-* globals.php
-* help.html
-* helpmark_a.png
-* helpmark.png
-* topotest.mwf
-* topotestN.mwf
-* utils.inc.php
-* vdb.inc.php
+* acc.localiz.css -- CSS styles
+* acc.localiz.mwf -- MapGuide map file
+* acc.localiz.rep.php -- deprecated
+* Accident.SMB -- symbol for accident marking
+* globals.php -- lib module
+* help.html -- info page
+* helpmark_a.png -- button picture
+* helpmark.png -- button picture
+* topotest.mwf -- MapGuide map file
+* topotestN.mwf -- MapGuide map file
+* utils.inc.php -- lib module
+* vdb.inc.php -- lib module
