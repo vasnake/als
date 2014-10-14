@@ -315,6 +315,7 @@ select max(t.x) as MAXX, max(t.y) as MAXY, min(t.x) as MINX, min(t.y) as MINY fr
     return true;
 } // findAndPrintLockersAndDisconn
 
+
 function printReport() {
     $this->bStat = false;
     $this->sHowDone = 'сбой при поиске составлении отчета';
