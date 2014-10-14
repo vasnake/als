@@ -21,6 +21,7 @@ All this tasks was performed using PL/SQL package that was written in two month.
 Components
 
 * web -- web frontend
+* oracle -- PL/SQL code and other Oracle DB related stuff
 
 Links
 
