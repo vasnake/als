@@ -282,7 +282,7 @@ select * from table(mogTopo.getDisconnectedByDampedLinks2( ? ))
     }
     $iRecCount = xmlDumpRecset($this->dbOra, 'Disconnected');
 
-// составить список линков оставшихся без газа:
+    // составить список линков оставшихся без газа:
     $disconnlinks = '';
     $this->dbOra->recordsetMoveFirst();
     {
@@ -297,12 +297,12 @@ select * from table(mogTopo.getDisconnectedByDampedLinks2( ? ))
         } // recordset EOF
     } // end make disconnlinks list
 
-// вычислить бокс для линков без газа:
+    // вычислить бокс для линков без газа:
 $sql = '
 select max(t.x) as MAXX, max(t.y) as MAXY, min(t.x) as MINX, min(t.y) as MINY from table
-( select SDO_UTIL.GETVERTICES(mbr) from
-( select sdo_aggr_mbr(geom) mbr from topolink where id in
-( ' .$disconnlinks. ' ) ) ) t
+    ( select SDO_UTIL.GETVERTICES(mbr) from
+    ( select sdo_aggr_mbr(geom) mbr from topolink where id in
+    ( ' .$disconnlinks. ' ) ) ) t
 ';
     if (false == $this->dbOra->Execute($sql)) {
         ERR("Невозможно выполнить запрос к БД: " . $sql);
@@ -343,7 +343,7 @@ function printReport() {
     }
     OUT('</failedLinks>');
 
-// 4 lists: lockers bolts, lockers grp, disconn grp, disconn boilers
+    // 4 lists: lockers bolts, lockers grp, disconn grp, disconn boilers
     $strlistLockerBolt = '';
     for ($i = 0; $i < count($arrLockersObj); $i++) {
         $lo = explode(':', $arrLockersObj[$i]);
@@ -380,12 +380,12 @@ function printReport() {
         }
     }
 
-// lockers: bolts
+    // lockers: bolts
 $sql = '
 SELECT Gas.Bolt.BoltID, Org.Department.DepartmentName, Org.Service.ServiceName, \'-\' AS BoltAddress
-    FROM Gas.Bolt INNER JOIN Org.Service
-    ON Gas.Bolt.ServiceID = Org.Service.ServiceID INNER JOIN Org.Department
-    ON Gas.Bolt.DepartmentID = Org.Department.DepartmentID
+FROM Gas.Bolt
+    INNER JOIN Org.Service ON Gas.Bolt.ServiceID = Org.Service.ServiceID
+    INNER JOIN Org.Department ON Gas.Bolt.DepartmentID = Org.Department.DepartmentID
 where Gas.Bolt.BoltID in (' .$strlistLockerBolt. ')
     ORDER BY Gas.Bolt.DepartmentID, Gas.Bolt.ServiceID, Gas.Bolt.BoltID
 ';
@@ -396,7 +396,7 @@ where Gas.Bolt.BoltID in (' .$strlistLockerBolt. ')
     }
     $iRecCount = xmlDumpRecset($this->db, 'lockersBOLT');}
 
-// lockers: GRP, SHRP
+    // lockers: GRP, SHRP
 $sql = '
 SELECT Gas.GRP.GrpID,
     Gas.GrpType.GrpTypeName, Gas.GRP.GrpNumber, Org.Department.DepartmentName,
@@ -404,12 +404,12 @@ SELECT Gas.GRP.GrpID,
     Gas.GRP.GrpName, Gas.GRP.GrpAddress,
     Gas.GasObjectProperty.GasObjPropertyName AS GrpServiceProperty,
     GasObjectProperty_1.GasObjPropertyName AS GrpBalanceProperty
-    FROM Org.Service INNER JOIN Gas.GRP
-    ON Org.Service.ServiceID = Gas.GRP.ServiceID INNER JOIN Org.Department
-    ON Gas.GRP.DepartmentID = Org.Department.DepartmentID INNER JOIN Gas.GasObjectProperty
-    ON Gas.GRP.ServiceGasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID INNER JOIN Gas.GrpType
-    ON Gas.GRP.GrpTypeID = Gas.GrpType.GrpTypeID INNER JOIN Gas.GasObjectProperty GasObjectProperty_1
-    ON Gas.GRP.BalanceGasObjPropertyID = GasObjectProperty_1.GasObjPropertyID
+FROM Org.Service
+    INNER JOIN Gas.GRP ON Org.Service.ServiceID = Gas.GRP.ServiceID
+    INNER JOIN Org.Department ON Gas.GRP.DepartmentID = Org.Department.DepartmentID
+    INNER JOIN Gas.GasObjectProperty ON Gas.GRP.ServiceGasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID
+    INNER JOIN Gas.GrpType ON Gas.GRP.GrpTypeID = Gas.GrpType.GrpTypeID
+    INNER JOIN Gas.GasObjectProperty GasObjectProperty_1 ON Gas.GRP.BalanceGasObjPropertyID = GasObjectProperty_1.GasObjPropertyID
 where Gas.GRP.GrpID in (' .$strlistLockerGrp. ')
     ORDER BY Org.Department.DepartmentName, Org.Service.ServiceName
 ';
@@ -420,7 +420,7 @@ where Gas.GRP.GrpID in (' .$strlistLockerGrp. ')
     }
     $iRecCount = xmlDumpRecset($this->db, 'lockersGRP');}
 
-// disconn: GRP, SHRP
+    // disconn: GRP, SHRP
 $sql = '
 SELECT Gas.GRP.GrpID,
     Gas.GrpType.GrpTypeName, Gas.GRP.GrpNumber, Org.Department.DepartmentName,
@@ -428,12 +428,11 @@ SELECT Gas.GRP.GrpID,
     Gas.GRP.GrpName, Gas.GRP.GrpAddress,
     Gas.GasObjectProperty.GasObjPropertyName AS GrpServiceProperty,
     GasObjectProperty_1.GasObjPropertyName AS GrpBalanceProperty
-    FROM Org.Service INNER JOIN Gas.GRP
-    ON Org.Service.ServiceID = Gas.GRP.ServiceID INNER JOIN Org.Department
-    ON Gas.GRP.DepartmentID = Org.Department.DepartmentID INNER JOIN Gas.GasObjectProperty
-    ON Gas.GRP.ServiceGasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID INNER JOIN Gas.GrpType
-    ON Gas.GRP.GrpTypeID = Gas.GrpType.GrpTypeID INNER JOIN Gas.GasObjectProperty GasObjectProperty_1
-    ON Gas.GRP.BalanceGasObjPropertyID = GasObjectProperty_1.GasObjPropertyID
+FROM Org.Service INNER JOIN Gas.GRP ON Org.Service.ServiceID = Gas.GRP.ServiceID
+    INNER JOIN Org.Department ON Gas.GRP.DepartmentID = Org.Department.DepartmentID
+    INNER JOIN Gas.GasObjectProperty ON Gas.GRP.ServiceGasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID
+    INNER JOIN Gas.GrpType ON Gas.GRP.GrpTypeID = Gas.GrpType.GrpTypeID
+    INNER JOIN Gas.GasObjectProperty GasObjectProperty_1 ON Gas.GRP.BalanceGasObjPropertyID = GasObjectProperty_1.GasObjPropertyID
 where Gas.GRP.GrpID in (' .$strlistDisconnGrp. ')
     ORDER BY Org.Department.DepartmentName, Org.Service.ServiceName
 ';
@@ -444,15 +443,15 @@ where Gas.GRP.GrpID in (' .$strlistDisconnGrp. ')
     }
     $iRecCount = xmlDumpRecset($this->db, 'disconnGRP');}
 
-// disconn: boilers
+    // disconn: boilers
 $sql = '
 SELECT Gas.Boiler.BoilerID, Org.Department.DepartmentName,
     Org.Service.ServiceName, \'-\' AS BoilerName, \'-\' AS BoilerAddress,
     Gas.GasObjectProperty.GasObjPropertyName
-    FROM Org.Service INNER JOIN Gas.Boiler
-    ON Org.Service.ServiceID = Gas.Boiler.ServiceID INNER JOIN Org.Department
-    ON Gas.Boiler.DepartmentID = Org.Department.DepartmentID INNER JOIN Gas.GasObjectProperty
-    ON Gas.Boiler.GasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID
+FROM Org.Service
+    INNER JOIN Gas.Boiler ON Org.Service.ServiceID = Gas.Boiler.ServiceID
+    INNER JOIN Org.Department ON Gas.Boiler.DepartmentID = Org.Department.DepartmentID
+    INNER JOIN Gas.GasObjectProperty ON Gas.Boiler.GasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID
 where Gas.Boiler.BoilerID in (' .$strlistDisconnBoil. ')
     ORDER BY Org.Department.DepartmentName, Org.Service.ServiceName
 ';
@@ -463,67 +462,7 @@ where Gas.Boiler.BoilerID in (' .$strlistDisconnBoil. ')
     }
     $iRecCount = xmlDumpRecset($this->db, 'disconnBOIL');}
 
-/*
-
-на входе:
-<action>report</action>
-<taRep>
-LOCKERS#GRS:139,GRP:4590,GRP:4589
-*DISCONN#BOIL:2392,GRP:4703
-*FAILLINKS#4047:высокое I категории:300:40.2342:55.0353,4022:высокое II категории:110:39.9870:55.2302
-pipeID:press:diam:lon:lat, ...
-</taRep>
-
-нужно вывести:
-
-дату 25 ноября 2005
-setlocale (LC_ALL, array ('ru_RU.CP1251', 'rus_RUS.1251'));
-LC_TIME
-string strftime ( string format [, int timestamp ] )
-%e - day of the month as a decimal number, a single digit is preceded by a space (range ' 1' to '31')
-%B - full month name according to the current locale
-%Y - year as a decimal number including the century
-
-битые линки:
-    давление диаметр координаты
-
-запорные устройства задвижки:
-    номер, филиал, рэс, местоположение
-
-запорные устройства рег.пунктов:
-    тип, номер, филиал, рэс, название, местоположение, обслуживание, баланс
-«Запорные устройства внутри регуляторных пунктов» (аналогично для отключенных потребителей – «Регуляторные пункты»)
-SELECT     Gas.GrpType.GrpTypeName, Gas.GRP.GrpNumber, Org.Department.DepartmentName, Org.Service.ServiceName,
-                      Gas.GRP.GrpName, Gas.GRP.GrpAddress, Gas.GasObjectProperty.GasObjPropertyName AS GrpServiceProperty,
-                      GasObjectProperty_1.GasObjPropertyName AS GrpBalanceProperty
-FROM         Org.Service INNER JOIN
-                      Gas.GRP ON Org.Service.ServiceID = Gas.GRP.ServiceID INNER JOIN
-                      Org.Department ON Gas.GRP.DepartmentID = Org.Department.DepartmentID INNER JOIN
-                      Gas.GasObjectProperty ON Gas.GRP.ServiceGasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID INNER JOIN
-                      Gas.GrpType ON Gas.GRP.GrpTypeID = Gas.GrpType.GrpTypeID INNER JOIN
-                      Gas.GasObjectProperty GasObjectProperty_1 ON Gas.GRP.BalanceGasObjPropertyID = GasObjectProperty_1.GasObjPropertyID
-ORDER BY Org.Department.DepartmentName, Org.Service.ServiceName
-
-отключенные потребители:
-
-    котельные:
-        номер, филиал, рэс, название, местоположение, баланс
-Котельные
-SELECT     Gas.Boiler.BoilerID, Org.Department.DepartmentName, Org.Service.ServiceName, '-' AS BoilerName, '-' AS BoilerAddress,
-                      Gas.GasObjectProperty.GasObjPropertyName
-FROM         Org.Service INNER JOIN
-                      Gas.Boiler ON Org.Service.ServiceID = Gas.Boiler.ServiceID INNER JOIN
-                      Org.Department ON Gas.Boiler.DepartmentID = Org.Department.DepartmentID INNER JOIN
-                      Gas.GasObjectProperty ON Gas.Boiler.GasObjPropertyID = Gas.GasObjectProperty.GasObjPropertyID
-ORDER BY Org.Department.DepartmentName, Org.Service.ServiceName
-
-    рег. пункты:
-        тип, номер, филиал, рэс, название, местоположение, обслуживание, баланс
-
-*/
-
     setlocale(LC_TIME, array ('ru_RU.CP1251', 'rus_RUS.1251'));
-    //$strDate = strftime(' %d %B %Y');
     $strDate = strftime(' %d/%m/%Y');
     printTag('currDate', $strDate);
 
@@ -535,9 +474,9 @@ ORDER BY Org.Department.DepartmentName, Org.Service.ServiceName
 
 function doWork() {
     if ( $this->bStat == false) {
-        ERR('Ошибка инициализации. Обработка прервана.'); return false;
+        ERR('Ошибка инициализации. Обработка прервана.');
+        return false;
     }
-//	$this->printCommonData();
 
     if ( SEQ($this->sAction, 'findarc') ) {
         $this->findAndPrintPointedLink();
@@ -556,8 +495,6 @@ function doWork() {
 } // class VApp
 
 
-
-
 function DBG($logStr, $pref = "PHP DBG") {
     echo "\n<DBG>\n\t$pref:\n"; // if <!-- DBG> then need replace every -- in dump.
     if (is_array($logStr)) {
@@ -574,372 +511,5 @@ function DBG($logStr, $pref = "PHP DBG") {
     echo "\t$pref.\n</DBG>\n";
     return;
 };
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-/*
-
-error_reporting(E_ALL);
-ini_set('display_errors', false);
-ini_set('html_errors', false);
-ini_set('track_errors', true);
-set_time_limit ( 1700 );
-
-// http заголовки для страницы
-header("Content-Type: application/xml; charset=WINDOWS-1251");
-// header("Expires: " . gmdate("D, d M Y H:i:s", mktime()+70 ) . " GMT");
-header("Expires: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-
-$appParams = array();
-$appParams['udlFileName'] = 'E:\files\website\mosoblgaz\html\_test\topo\topotest.udl';
-
-// стандартная шапка страницы
-echo '<?xml version="1.0" encoding="WINDOWS-1251"?>';
-echo '<page>';
-// echo '</page>';
-// exit();
-
-// http://igate.geol.msu.ru/gismog/perspectives/acc.localiz/acc.localiz.php?client=ajax&action=findarc&lon=40.25449543571657&lat=55.0521175361913
-
-adoInitLibrary();
-
-// забираем параметры из http запроса
-echo '<qry>';
-$action = $_REQUEST['action'];
-echo '<action>' .$action. '</action>';
-
-if (SEQ($action, 'findarc') != false) { // find pointed link
-    $lon = $_REQUEST['lon'];
-    $lat = $_REQUEST['lat'];
-    echo '<lon>' .$lon. '</lon> <lat>' .$lat. '</lat>';
-    echo '</qry>';
-    findAndPrintPointedLink($lon, $lat);
-} else if (SEQ($action, 'findbolts') != false) { // find bolts for cut off gas
-    $failedlinks = $_REQUEST['failedlinks'];
-    $failedlinks = utf8win1251(urldecode($failedlinks)); // JavaScript: encodeURIComponent();
-    echo '<failedlinks>' .safeStr($failedlinks). '</failedlinks>';
-    echo '</qry>';
-    findAndPrintLockingObjects($failedlinks);
-} else if (SEQ($action, 'findcust') != false) { // find customers, who without gas
-    $locked = $_REQUEST['locked'];
-    $locked = utf8win1251(urldecode($locked)); // JavaScript: encodeURIComponent();
-    echo '<locked>' .safeStr($locked). '</locked>';
-    echo '</qry>';
-    findAndPrintCustomers($locked);
-} else {
-    echo '</qry>';
-}
-
-// закрываем страницу
-echo '</page>';
-
-function findAndPrintPointedLink($lon, $lat) {
-// найти и распечатать ID указанного точкой линка
-//	$linkid = rand();
-//	echo '<linkid>' .$linkid. '</linkid>';
-//	select mogTopo.getLinkByPoint(33.33,55.55) LINKID from dual;
-    $adoRecs = adoExecQuery('select mogTopo.getLinkByPoint(' .$lon. ', ' .$lat. ') linkid from dual');
-    while ($adoRecs != null && $adoRecs->State == 1 && !$adoRecs->EOF) {
-        for ($i = 0; $i < $adoRecs->Fields->Count(); $i++) {
-            $fld = $adoRecs->Fields->Item($i); $fn = strtolower((string)$fld->Name); $fv = (string)$fld->Value;
-            echo'<' . $fn . '>' . $fv . '</' . $fn . '>';
-        }
-        $adoRecs->MoveNext();
-    }
-}; // findAndPrintPointedLink
-
-function findAndPrintLockingObjects ($failedlinks) { // list of  linkid, comma separated
-// найти и распечатать обьекты (тип, ID) отсекающие течение газа в битые линки (а заодно и сами линки)
-// GRS, GRP, Boiler, Bolt, Link, netMBR
-// запорное устройство - комбинация из типа пункта, ID пункта, ID линка (GRP,77,33)
-// select * from table(mogTopo.getLockers4FailedLinks('3,7,17')) order by type, objid, id;
-    global $appParams;
-
-    getObjectsBySql('select * from table(mogTopo.getLockers4FailedLinks(\'' .$failedlinks. '\')) order by type, objid, id');
-    $arrGRPID = $appParams['arrGRPID'];
-    $arrGRSID = $appParams['arrGRSID'];
-    $arrPipeID = $appParams['arrPipeID'];
-    $arrBoilerID = $appParams['arrBoilerID'];
-    $arrBoltID = $appParams['arrBoltID'];
-    $arrEndID = $appParams['arrEndID'];
-
-// создаем строки - списки ID
-    $listGRP = implode(',', $arrGRPID);
-    $listGRS = implode(',', $arrGRSID);
-    $listLink = implode(',', $arrPipeID);
-    $listBoiler = implode(',', $arrBoilerID);
-    $listBolt = implode(',', $arrBoltID);
-    $listEnds = implode(',', $arrEndID);
-
-    $maxx = -180; $minx = 180; $maxy = -90; $miny = 90;
-
-    echo '<listGRS>' .$listGRS. '</listGRS>';
-    echo '<listGRP>' .$listGRP. '</listGRP>';
-    echo '<listBoiler>' .$listBoiler. '</listBoiler>';
-    echo '<listBolt>' .$listBolt. '</listBolt>';
-    echo '<listLink>' .$listLink. '</listLink>';
-    echo '<listEnds>' .$listEnds. '</listEnds>';
-
-// MBR:
-    $sql = 'select max(t.x) as MAXX, max(t.y) as MAXY, min(t.x) as MINX, min(t.y) as MINY from table
-( select SDO_UTIL.GETVERTICES(mbr) from
-( select sdo_aggr_mbr(geom) mbr from topolink where id in
-( ' .$listLink. ' )
-) ) t';
-
-    echo '<netmbr>';
-    getObjectsBySql($sql);
-    echo '</netmbr>';
-//	echo '<netmbr> <MAXX>' .$maxx. '</MAXX> <MAXY>' .$maxy. '</MAXY> <MINX>' .$minx. '</MINX> <MINY>' .$miny. '</MINY> </netmbr>';
-}; // findAndPrintLockingObjects
-
-function findAndPrintCustomers($locked) { // LINK:4940,3989;GRS:16820,477;GRP:20818,19491;BOILER:17696,24281;BOLT:12446,1919
-// найти потребителей (ГРП и котельные) отключенных от источника по причине перекрытия указанных запорных устройств
-// если к потребителю подходит хоть один линк с газом - считать подключенным.
-// select * from table(mogTopo.getDisconnectedByDampedLinks('3,7,17'));
-    global $appParams;
-
-// найти список вырубленных линков:
-    $strLinks = '';
-    $arrT = explode(';', $locked);
-    $arrTLength =count($arrT);
-    for ($i = 0; $i < $arrTLength; $i++) {
-        if ( strncasecmp ( 'LINK', $arrT[$i], 4 ) == 0 ) {
-            $strLinks = $arrT[$i];
-            break;
-        }
-    }
-    $arrT = explode(':', $strLinks);
-    $strLinks = $arrT[1];
-
-// получим массивы обьектов (ГХ)
-    getObjectsBySql('select * from table(mogTopo.getDisconnectedByDampedLinks(\'' .$strLinks. '\'))');
-    $arrGRPID = $appParams['arrGRPID'];
-    $arrPipeID = $appParams['arrPipeID'];
-    $arrBoilerID = $appParams['arrBoilerID'];
-
-    $listGRP = implode(',', $arrGRPID);
-    $listLink = implode(',', $arrPipeID);
-    $listBoiler = implode(',', $arrBoilerID);
-
-    $maxx = -180; $minx = 180; $maxy = -90; $miny = 90;
-    echo '<listLink>' .$listLink. '</listLink>';
-    echo '<listGRP>' .$listGRP. '</listGRP>';
-    echo '<listBoiler>' .$listBoiler. '</listBoiler>';
-
-    $sql = 'select max(t.x) as MAXX, max(t.y) as MAXY, min(t.x) as MINX, min(t.y) as MINY from table
-( select SDO_UTIL.GETVERTICES(mbr) from
-( select sdo_aggr_mbr(geom) mbr from topolink where id in
-( ' .$listLink. ' )
-) ) t';
-
-    echo '<netmbr>';
-    getObjectsBySql($sql);
-    echo '</netmbr>';
-//	echo '<netmbr> <MAXX>' .$maxx. '</MAXX> <MAXY>' .$maxy. '</MAXY> <MINX>' .$minx. '</MINX> <MINY>' .$miny. '</MINY> </netmbr>';
-
-}; // findAndPrintCustomers
-
-function getObjectsBySql($sql) {
-    global $appParams;
-// создаем массивы для сохранения списков ID обьектов
-    $arrGRPID = array();
-    $arrGRSID = array();
-    $arrPipeID = array();
-    $arrBoilerID = array();
-    $arrBoltID = array();
-    $arrEndID = array();
-// выполняем запрос и перебираем строки
-    $adoRecs = adoExecQuery($sql);
-echo '
-<DBG>adorecs is null: ' .(($adoRecs == null)?'true':'false'). ', adorecs.state: ' .$adoRecs->State. ', adorecs.eof: ' .(($adoRecs->EOF == false)?'no':'yes'). '</DBG>
-';
-
-    while ($adoRecs != null && $adoRecs->State == 1 && !$adoRecs->EOF) {
-        echo '<row>';
-        for ($i = 0; $i < $adoRecs->Fields->Count(); $i++) {
-            $fld = $adoRecs->Fields->Item($i);
-            $fn = strtolower((string)$fld->Name);
-            $fv = (string)$fld->Value;
-            echo'<' . $fn . '>' . $fv . '</' . $fn . '>';
-// попутно сохраняем ID в массивы
-            if ( SEQ($fn, 'TYPE') ) {
-//				$fld = $adoRecs->Fields->Item('objid'); $oid = $fld->Value;
-                $fld_id = $adoRecs->Fields->Item('id'); $id = $fld_id->Value;
-                if (      SEQ($fv, 'GRS') ) $arrGRSID[] = $id;
-                else if ( SEQ($fv, 'GRP') ) $arrGRPID[] = $id;
-                else if ( SEQ($fv, 'BOIL') ) $arrBoilerID[] = $id;
-                else if ( SEQ($fv, 'BOLT') ) $arrBoltID[] = $id;
-                else if ( SEQ($fv, 'END') ) $arrEndID[] = $id;
-                else if ( SEQ($fv, 'PART') || SEQ($fv, 'WHOLE') ) $arrPipeID[] = $id;
-            }
-        }
-        echo '</row>';
-        $adoRecs->MoveNext();
-    } // end recordset
-
-    $arrGRPID = array_unique($arrGRPID); $arrGRSID = array_unique($arrGRSID);
-    $arrPipeID = array_unique($arrPipeID);
-    $arrBoilerID = array_unique($arrBoilerID); $arrBoltID = array_unique($arrBoltID);
-    $arrEndID = array_unique($arrEndID);
-// сохраняем результат:
-    $appParams['arrGRPID'] = $arrGRPID;
-    $appParams['arrGRSID'] = $arrGRSID;
-    $appParams['arrPipeID'] = $arrPipeID;
-    $appParams['arrBoilerID'] = $arrBoilerID;
-    $appParams['arrBoltID'] = $arrBoltID;
-    $appParams['arrEndID'] = $arrEndID;
-}; // getObjectsBySql
-
-
-
-// ###############################################################################
-// utils
-// ###############################################################################
-
-
-function outXmlTag ( $aTagName, $aTagValue) {
-    echo '<' .$aTagName. '>' .$aTagValue. '</' .$aTagName. '>';
-}; // outXmlTag
-
-function SEQ ( $str1, $str2 ) {
-    if ( strcasecmp ( (string)$str1, (string)$str2 ) == 0 )	return TRUE;
-    return FALSE;
-};
-
-function utf8win1251($s){
-    $out=""; $c1=""; $byte2=false;
-    for ($c=0; $c < strlen($s); $c++){
-        $i=ord($s[$c]);
-        if ($i <= 127) $out .= $s[$c];
-        if ($byte2){
-            $new_c2 = ($c1 & 3) * 64 + ($i & 63);
-            $new_c1 = ($c1 >> 2) & 5;
-            $new_i = $new_c1 * 256 + $new_c2;
-            if ($new_i == 1025) $out_i = 168;
-            else if ($new_i == 1105) $out_i = 184;
-            else $out_i = $new_i - 848;
-            $out .= chr($out_i);
-            $byte2 = false;
-        }
-        if ( ($i>>5)==6) {$c1=$i; $byte2 = true;}
-    }
-    return $out;
-}; // function utf8win1251($s)
-
-function safeStr($aStr) {
-    return htmlspecialchars($aStr);
-    //return htmlentities($aStr, ENT_COMPAT, 'cp1251');
-};
-
-//$adoRecs = adoExecQuery('select mogTopo.getLinkByPoint(' .$lon. ', ' .$lat. ') LINKID from dual');
-function adoExecQuery($sql) {
-    global $appParams;
-    $adoCmd = $appParams['adoCmd'];
-    $adoConn = $appParams['adoConn'];
-    $adoRecs = $appParams['adoRecs'];
-
-    $adoCmd->CommandText = $sql;
-    if ($adoConn->State == 1) {
-        if ($adoRecs->State == 1) $adoRecs->Close();
-        $adoCmd->ActiveConnection = $adoConn;
-        $adoRecs->Open($adoCmd);
-    }
-    echo '<DBG><qry>' . safeStr($adoCmd->CommandText) . '</qry><Recsstat>' . $adoRecs->State . '</Recsstat></DBG>';
-    return $adoRecs;
-}; // adoExecQuery
-
-function adoInitLibrary() {
-    global $appParams;
-    $udlFileName = $appParams['udlFileName'];
-// создаем обьекты ADODB
-    $adoConn = new COM("ADODB.Connection") or die("Невозможно инициализировать ADO");
-    $adoRecs = new COM("ADODB.Recordset") or die("Невозможно инициализировать ADO");
-    $adoCmd = new COM("ADODB.Command") or die("Невозможно инициализировать ADO");
-// открываем БД
-    if ($adoConn->State != 1) $adoConn->Open('File Name=' . $udlFileName);
-    echo '<DBG><connstat>' . $adoConn->State . '</connstat></DBG>';
-    //$adoCmd->CommandType = 0x0001;
-    //$adoRecs->CursorLocation = 3;
-    $adoRecs->CursorLocation = 2;
-
-    $appParams['adoCmd'] = $adoCmd;
-    $appParams['adoConn'] = $adoConn;
-    $appParams['adoRecs'] = $adoRecs;
-
-    return $adoConn->State;
-}; // adoInitLibrary
-
-function testAdoAndOracle() {
-    global $appParams;
-    $udlFileName = $appParams['udlFileName'];
-// создаем обьекты ADODB
-    $adoConn = new COM("ADODB.Connection") or die("Невозможно инициализировать ADO");
-    $adoRecs = new COM("ADODB.Recordset") or die("Невозможно инициализировать ADO");
-    $adoCmd = new COM("ADODB.Command") or die("Невозможно инициализировать ADO");
-
-// открываем БД
-    if ($adoConn->State != 1) $adoConn->Open('File Name=' . $udlFileName);
-    echo '<connstat>' . $adoConn->State . '</connstat>';
-    //$adoCmd->CommandType = 0x0001;
-    //$adoRecs->CursorLocation = 3;
-    $adoRecs->CursorLocation = 2;
-
-// выполняем запрос
-    $adoCmd->CommandText = 'select * from dept';
-
-    if ($adoConn->State == 1) {
-        $adoCmd->ActiveConnection = $adoConn;
-        echo '<DBG>' .$adoCmd->CommandText. '</DBG>';
-        $adoRecs->Open($adoCmd);
-    }
-    echo '<Recsstat>' . $adoRecs->State . '</Recsstat>';
-
-// перебираем строки выборки
-    while ($adoRecs != null && $adoRecs->State == 1 && !$adoRecs->EOF) {
-    // распечатываем данные строки
-        echo'<row>';
-        for ($i = 0; $i < $adoRecs->Fields->Count(); $i++) {
-            $fld = $adoRecs->Fields->Item($i); $fn = (string)$fld->Name; $fv = (string)$fld->Value;
-            echo'<' . $fn . '>' . $fv . '</' . $fn . '>';
-        }
-        echo'</row>';
-        $adoRecs->MoveNext();
-    }
-}; // testAdoAndOracle
-
-function testPersistentOracleConnection() {
-// php.ini
-// extension=php_oracle.dll
-    $query = 'select * from dept';
-    //$oraConn = ora_logon('scott@gisdb.vsrb', 'tiger');
-    $oraConn = ora_plogon('scott@gisdb.vsrb', 'tiger');
-    outXmlTag('oraConn', $oraConn);
-    $oraCursor = ora_open($oraConn);
-    outXmlTag('oraCursor', $oraCursor);
-    if ($oraCursor != FALSE) {
-        if (ora_parse ($oraCursor, $query) != FALSE) {
-            outXmlTag('oraCursorParse', $oraCursor);
-            if (ora_exec($oraCursor) != FALSE) {
-                outXmlTag('oraExec', $oraCursor);
-                while(ora_fetch($oraCursor)) {
-                    echo '<row>';
-                    $numfields = ora_numcols($oraCursor);
-                    for($col=0;$col<$numfields;$col++){
-                        outXmlTag(ora_columnname($oraCursor, $col), ora_getcolumn($oraCursor, $col));
-                    }
-                    echo '</row>';
-                }
-            }
-        }
-        ora_close($oraCursor);
-//		ora_commit($oraConn);
-    }
-//	ora_logoff($oraConn);
-}; // testPersistentOracleConnection
-
-*/
 
 ?>

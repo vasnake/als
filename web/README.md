@@ -31,6 +31,13 @@ PL/SQL interface
 
 `select * from table(mogTopo.getLockers4FailedLinks())`
 
+* mogTopo.getDisconnByFailedLinks -- find disconnected consumers.
+Second version of this function: mogTopo.getDisconnectedByDampedLinks2 can accept parameter longer than 4000 bytes. Example
+
+```
+select * from table(mogTopo.getDisconnByFailedLinks())
+select * from table(mogTopo.getDisconnectedByDampedLinks2())
+```
 
 Other files
 
